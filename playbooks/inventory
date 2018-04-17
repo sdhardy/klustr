@@ -1,0 +1,3 @@
+[lab]
+10.66.8.58 ansible_ssh_user=root
+

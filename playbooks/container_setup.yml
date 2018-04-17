@@ -1,0 +1,32 @@
+---
+  - name: Identify lab hosts to build on
+    hosts: lab
+    become: true
+    tasks:
+      - name: Install dependency packages for lxc
+        apt: name={{ item }} state=present
+        with_items:
+          - python-lxc
+          - lxc
+
+      - name: Create Rabbit MQ LXC containers
+        lxc_container:
+          name: '{{ item }}'
+          container_log: true
+          template: ubuntu
+          state: started
+          template_options: --release trusty
+          container_config:
+            lxc.start.auto = 1
+            lxc.start.delay = 3
+          container_command: |
+            echo "Hello world" | tee -a /root/hello
+        with_items:
+          - node1_rabbit_mq_container
+          - node2_rabbit_mq_container
+          - node3_rabbit_mq_container
+        register: container_info
+
+      - name: Check container info
+        debug:
+          var: container_info
