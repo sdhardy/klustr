@@ -29,4 +29,4 @@
 
       - name: Get container IP addresses
         debug:
-          var: container_info.results
+          var: container_info.results.lxc_container.ips
