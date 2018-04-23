@@ -27,6 +27,6 @@
           - node3_rabbit_mq_container
         register: container_info
 
-      - name: Check container info
+      - name: Get container IP addresses
         debug:
           var: container_info
