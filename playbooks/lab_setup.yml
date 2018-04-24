@@ -16,11 +16,14 @@
           template: ubuntu
           state: started
           template_options: --release trusty
-          #container_config:
-          #  lxc.start.auto: 1
-          #  lxc.start.delay: 3
-          #container_command: |
-          #  echo "Hello world" | tee -a /root/hello
+          container_config:
+            - "lxc.start.auto=1"
+            - "lxc.start.delay=3"
+          container_command: |
+            while [[ ! $(ip a s eth0) =~ "inet " ]]
+             do 
+              sleep 1
+             done
         with_items:
           - node1_rabbit_mq_container
           - node2_rabbit_mq_container
@@ -29,4 +32,4 @@
 
       - name: Get container IP addresses
         debug:
-          var: container_info.results.lxc_container
+          var: container_info.results
