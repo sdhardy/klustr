@@ -47,8 +47,8 @@
       - name: Generate rabbitmq cluster variables
         lineinfile:
           state: present
-          line: "{{ item.name: item.value }}"
+          line: "{{ item.name }} => {{ item.value }}"
           dest: /tmp/variables
         with_items:
-          - { name: 'rabbitmq_erlang_cookie', value "{{ 9999999999 | random| to_uuid }}" }
+          - { name: 'rabbitmq_erlang_cookie', value: "{{ 9999999999 | random| to_uuid }}" }
           - { name: 'rabbitmq_master', value: "{{ groups['rabbitmq'] | random }}" }
