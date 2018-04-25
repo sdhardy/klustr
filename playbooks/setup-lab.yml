@@ -21,7 +21,7 @@
             - "lxc.start.delay=3"
           container_command: |
             while [[ ! $(ip a s eth0) =~ "inet " ]]
-             do 
+             do
               sleep 1
              done
         with_items:
@@ -30,10 +30,16 @@
           - node3_rabbit_mq_container
         register: container_info
 
+      - name: Create rabbit cluster inventory
+        lineinfile:
+          line: "[rabbitmq]"
+          state: present
+          create: yes
+          dest: inventory/rabbit
+
       - name: Get container IP addresses
         lineinfile:
-          create: yes
-          state: present 
+          state: present
           line: "{{ item.lxc_container.ips.0 }}"
-          dest: /tmp/testwrite
+          dest: inventory/rabbit
         with_items: "{{ container_info.results }}"
