@@ -31,5 +31,9 @@
         register: container_info
 
       - name: Get container IP addresses
-        debug:
-          var: container_info.results
+        lineinfile:
+          create: yes
+          state: present 
+          line: "{{ item.lxc_container.ips.0 }}"
+          dest: /tmp/testwrite
+        with_items: "{{ container_info.results }}"
