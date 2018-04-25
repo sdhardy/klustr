@@ -43,3 +43,12 @@
           line: "{{ item.lxc_container.ips.0 }}"
           dest: inventory/rabbit
         with_items: "{{ container_info.results }}"
+
+      - name: Generate rabbitmq cluster variables
+        lineinfile:
+          state: present
+          line: "{{ item.name: item.value }}"
+          dest: /tmp/variables
+        with_items:
+          - { name: 'rabbitmq_erlang_cookie', value "{{ 9999999999 | random| to_uuid }}" }
+          - { name: 'rabbitmq_master', value: "{{ groups['rabbitmq'] | random }}" }
