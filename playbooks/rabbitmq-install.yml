@@ -1,0 +1,10 @@
+---
+  -name: Rabbit MQ Cluster
+   hosts: rabbitmq
+   tasks:
+   - name: Load variables variables
+     include_vars:
+       file: lab_variables.yml
+
+   - name: Print variables
+     debug: rabbitmq_erlang_cookie

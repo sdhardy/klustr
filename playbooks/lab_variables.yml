@@ -1,0 +1,2 @@
+rabbitmq_erlang_cookie: "{{ 9999999999 | random| to_uuid }}"
+rabbitmq_master: "{{ groups['rabbitmq'] | random }}"
