@@ -32,23 +32,14 @@
 
       - name: Create rabbit cluster inventory
         lineinfile:
+          create: yes
           line: "[rabbitmq]"
           state: present
-          create: yes
-          dest: inventory/rabbit
+          dest: '{{ playbook_dir }}/inventory/rabbit'
 
       - name: Get container IP addresses
         lineinfile:
           state: present
           line: "{{ item.lxc_container.ips.0 }}"
-          dest: inventory/rabbit
+          dest: '{{ playbook_dir }}/inventory/rabbit'
         with_items: "{{ container_info.results }}"
-
-      - name: Generate rabbitmq cluster variables
-        lineinfile:
-          state: present
-          line: "{{ item.name }} => {{ item.value }}"
-          dest: /tmp/variables
-        with_items:
-          - { name: 'rabbitmq_erlang_cookie', value: "{{ 9999999999 | random| to_uuid }}" }
-          - { name: 'rabbitmq_master', value: "{{ groups['rabbitmq'] | random }}" }
