@@ -4,15 +4,19 @@
     tasks:
     - name: Select rabbitmq master
       set_fact:
-        rabbitmq_master: "{{ groups.rabbitmq | random }}"
+        rabbitmq_master: "{{ groups['rabbitmq'][0] }}"
+      when: rabbitmq_master is not defined
 
-    - name: Generate rabbitmq cluster variables
-      lineinfile:
-        create: yes
-        state: present
-        line: "{{ item.name }} => {{ item.value }}"
-        dest: /tmp/variables
-      with_items:
-        - { name: 'rabbitmq_erlang_cookie', value: "{{ 9999999999 | random| to_uuid }}" }
-        - { name: 'rabbitmq_master', value: "{{ rabbitmq_master }}" }
-      delegate_to: '{{ rabbitmq_master }}'
+    - name: Test random host selection
+      debug: msg="Variable is {{ rabbitmq_master }}"
+
+    #- name: Generate rabbitmq cluster variables
+    #  lineinfile:
+    #    create: yes
+    #    state: present
+    #    line: "{{ item.name }} => {{ item.value }}"
+    #    dest: /tmp/variables
+    #  with_items:
+    #    - { name: 'rabbitmq_erlang_cookie', value: "{{ 9999999999 | random| to_uuid }}" }
+    #    - { name: 'rabbitmq_master', value: "{{ rabbitmq_master }}" }
+    #  delegate_to: '{{ rabbitmq_master }}'
