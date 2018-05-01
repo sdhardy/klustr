@@ -9,7 +9,7 @@
 
     - name: Generate rabbitmq erlang cookie
       set_fact:
-        rabbitmq_erlang_cookie: "{{ lookup('password', '/tmp/.erlang.cookie length=18 chars=ascii_letters,digits') }}"
+        rabbitmq_erlang_cookie: "{{ lookup('password', '/tmp/.erlang.cookie length=20 chars=ascii_letters,digits') }}"
       when: rabbitmq_erlang_cookie is not defined
 
     - name: Install rabbit mq
@@ -20,6 +20,14 @@
       with_items:
         - rabbitmq-server
         - erlang-nox
+
+    - name: Push rabbit cluster erlang cookie key
+      template:
+        src: .erlang.cookie.j2
+        dest: /var/lib/rabbitmq/.erlang.cookie
+        owner: rabbitmq
+        group: rabbitmq
+        mode: 0400
 
     #- name: Generate rabbitmq cluster variables
     #  lineinfile:
