@@ -29,6 +29,11 @@
         group: rabbitmq
         mode: 0400
 
+    - name: Restart rabbitmq server
+      service:
+        name: rabbitmq-server
+        state: restarted
+
     #- name: Generate rabbitmq cluster variables
     #  lineinfile:
     #    create: yes
