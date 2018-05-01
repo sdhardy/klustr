@@ -7,8 +7,13 @@
         rabbitmq_master: "{{ groups['rabbitmq'][0] }}"
       when: rabbitmq_master is not defined
 
-    - name: Test random host selection
-      debug: msg="Variable is {{ rabbitmq_master }}"
+    - name: Generate rabbitmq erlang cookie
+      set_fact:
+        rabbitmq_erlang_cookie: "{{ lookup('password', '/tmp/.erlang.cookie length=18 chars=ascii_letters,digits') }}"
+      when: rabbitmq_erlang_cookie is not defined
+
+    #- name: Test random host selection
+    #  debug: msg="Master is {{ rabbitmq_master}} | Elang cookie is {{ rabbitmq_erlang_cookie }}"
 
     #- name: Generate rabbitmq cluster variables
     #  lineinfile:
