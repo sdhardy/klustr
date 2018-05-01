@@ -23,7 +23,7 @@
 
     - name: Push rabbit cluster erlang cookie key
       template:
-        src: .erlang.cookie.j2
+        src: common/templates/.erlang.cookie.j2
         dest: /var/lib/rabbitmq/.erlang.cookie
         owner: rabbitmq
         group: rabbitmq
