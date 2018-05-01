@@ -12,8 +12,14 @@
         rabbitmq_erlang_cookie: "{{ lookup('password', '/tmp/.erlang.cookie length=18 chars=ascii_letters,digits') }}"
       when: rabbitmq_erlang_cookie is not defined
 
-    #- name: Test random host selection
-    #  debug: msg="Master is {{ rabbitmq_master}} | Elang cookie is {{ rabbitmq_erlang_cookie }}"
+    - name: Install rabbit mq
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      with_items:
+        - rabbitmq-server
+        - erlang-nox
 
     #- name: Generate rabbitmq cluster variables
     #  lineinfile:
