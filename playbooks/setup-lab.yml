@@ -2,6 +2,11 @@
   - name: Identify lab hosts to build on
     hosts: lab
     become: true
+    vars:
+      rabbit_nodes:
+        - node1_rabbit_mq_container
+        - node2_rabbit_mq_container
+        - node3_rabbit_mq_container
     tasks:
       - name: Install dependency packages for lxc
         apt: name={{ item }} state=present
@@ -24,10 +29,7 @@
              do
               sleep 1
              done
-        with_items:
-          - node1_rabbit_mq_container
-          - node2_rabbit_mq_container
-          - node3_rabbit_mq_container
+        with_items: '{{ rabbit_nodes }}'
         register: container_info
 
       - name: Create rabbit cluster inventory
@@ -41,5 +43,31 @@
         lineinfile:
           state: present
           line: "{{ item.lxc_container.ips.0 }}"
-          dest: '{{ playbook_dir }}/inventory/rabbit'
+          path: '{{ playbook_dir }}/inventory/rabbit'
         with_items: "{{ container_info.results }}"
+
+      - name: Add SSH fingerpring to ~/.ssh/known_hosts
+        shell: ssh-keyscan -H '{{ item.lxc_container.ips.0 }}' >> ~/.ssh/known_hosts
+        with_items: "{{ container_info.results }}"
+
+      - name: Generate a temporary hosts file for rabbit cluster nodes
+        lineinfile:
+          create: yes
+          state: present
+          path: '/tmp/rabbitaqdsUB' 
+          line: "{{ item.lxc_container.ips.0 }}  {{ item.item }}"
+        with_items: "{{ container_info.results }}"
+
+      - name: Use file contents to generate /etc/hosts
+        set_fact:
+          file_contents: "{{ lookup('file', '/tmp/rabbitaqdsUB') }}"
+
+      - name: Copy base hosts file
+        shell: cp '{{ playbook_dir }}/common/templates/base_hosts.j2' '{{ playbook_dir }}/common/templates/hosts.j2'
+
+      - name: Attempt to read file contents
+        lineinfile:
+          line: '{{ item }}'
+          state: present
+          path: '{{ playbook_dir }}/common/templates/hosts.j2'
+        with_items: '{{ file_contents }}'
