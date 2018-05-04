@@ -1,0 +1,10 @@
+---
+- import_playbook: setup-lab.yml
+  tags:
+    - containers
+    - infrastructure
+
+- import_playbook: rabbitmq-install.yml
+  tags: 
+    - rabbitmq-install
+    
