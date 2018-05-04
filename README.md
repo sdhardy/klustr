@@ -7,6 +7,8 @@ Clustered technologies to be looked into initially include:
 - Galera
 - HA Proxy
 
+Only the rabbit MQ, portion is implemented at this time.
+
 To test the Rabbit Clustering functionality,
 
 1. Create inventory file in playboks inventory, e.g.
