@@ -32,42 +32,29 @@
         with_items: '{{ rabbit_nodes }}'
         register: container_info
 
-      - name: Create rabbit cluster inventory
-        lineinfile:
-          create: yes
-          line: "[rabbitmq]"
-          state: present
-          dest: '{{ playbook_dir }}/inventory/rabbit'
+      - name: Build in-memory inventory inventory
+        add_host:
+          name: '{{ item.item }}'
+          ansible_host: '{{ item.lxc_container.ips.0 }}'
+          groups: rabbit
+        with_items: '{{ container_info.results }}'
 
-      - name: Get container IP addresses
+      - name: Write in-memory inventory to file
+        template:
+          src: '{{ playbook_dir }}/common/templates/ansible_hosts.j2'
+          dest: '{{ playbook_dir}}/inventory/ansible_hosts'
+          owner: root
+          group: root
+          mode: 0644
+ 
+      - name: Update ansible inventory with host IP address
         lineinfile:
+          regexp: '^{{ item.item }}'
+          line: '{{ item.item }}  ansible_host={{ item.lxc_container.ips.0 }}'
           state: present
-          line: "{{ item.lxc_container.ips.0 }}"
-          path: '{{ playbook_dir }}/inventory/rabbit'
+          dest: '{{ playbook_dir}}/inventory/ansible_hosts'
         with_items: "{{ container_info.results }}"
 
       - name: Add SSH fingerpring to ~/.ssh/known_hosts
         shell: ssh-keyscan -H '{{ item.lxc_container.ips.0 }}' >> ~/.ssh/known_hosts
         with_items: "{{ container_info.results }}"
-
-      - name: Generate a temporary hosts file for rabbit cluster nodes
-        lineinfile:
-          create: yes
-          state: present
-          path: '/tmp/rabbitaqdsUB' 
-          line: "{{ item.lxc_container.ips.0 }}  {{ item.item }}"
-        with_items: "{{ container_info.results }}"
-
-      - name: Use file contents to generate /etc/hosts
-        set_fact:
-          file_contents: "{{ lookup('file', '/tmp/rabbitaqdsUB') }}"
-
-      - name: Copy base hosts file
-        shell: cp '{{ playbook_dir }}/common/templates/base_hosts.j2' '{{ playbook_dir }}/common/templates/hosts.j2'
-
-      - name: Attempt to read file contents
-        lineinfile:
-          line: '{{ item }}'
-          state: present
-          path: '{{ playbook_dir }}/common/templates/hosts.j2'
-        with_items: '{{ file_contents }}'

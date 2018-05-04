@@ -1,11 +1,21 @@
 ---
   - name: Rabbit MQ Cluster
-    hosts: rabbitmq
+    hosts: rabbit
+    vars:
+      current_group: rabbit
     tasks:
     - name: Select rabbitmq master
       set_fact:
-        rabbitmq_master: "{{ groups['rabbitmq'][0] }}"
+        rabbitmq_master: "{{ groups['rabbit'][0] }}"
       when: rabbitmq_master is not defined
+
+    - name: Push out new hosts file
+      template:
+        src: '{{ playbook_dir }}/common/templates/hosts.j2' 
+        dest: '/etc/hosts'
+        owner: root
+        group: root
+        mode: 0644
 
     - name: Generate rabbitmq erlang cookie
       set_fact:
@@ -21,6 +31,11 @@
         - rabbitmq-server
         - erlang-nox
 
+    - name: Stop rabbitmq server on nodes
+      service:
+        name: rabbitmq-server
+        state: stopped
+
     - name: Push rabbit cluster erlang cookie key
       template:
         src: common/templates/.erlang.cookie.j2
@@ -29,18 +44,43 @@
         group: rabbitmq
         mode: 0400
 
-    - name: Restart rabbitmq server
+    - name: Start rabbitmq server on nodes
       service:
         name: rabbitmq-server
-        state: restarted
+        state: started
 
-    #- name: Generate rabbitmq cluster variables
-    #  lineinfile:
-    #    create: yes
-    #    state: present
-    #    line: "{{ item.name }} => {{ item.value }}"
-    #    dest: /tmp/variables
-    #  with_items:
-    #    - { name: 'rabbitmq_erlang_cookie', value: "{{ 9999999999 | random| to_uuid }}" }
-    #    - { name: 'rabbitmq_master', value: "{{ rabbitmq_master }}" }
-    #  delegate_to: '{{ rabbitmq_master }}'
+    - name: Update /etc/hosts with cluster members
+      template:
+        src: '{{ playbook_dir }}/common/templates/hosts.j2'
+        dest: /etc/hosts
+        owner: root
+        group: root
+        mode: 0644
+ 
+    - name: Stop rabbit MQ app
+      shell: rabbitmqctl stop_app
+   
+    - name: Ensure rabbit app  is stopped before proceeding
+      wait_for:
+        port: 5672
+        state: stopped
+
+    - name: Start rabbit MQ app on master node
+      shell: rabbitmqctl start_app
+      delegate_to: '{{ rabbitmq_master }}'
+      run_once: true
+
+    - name: Ensure rabbit app  is stopped before proceeding
+      wait_for:
+        port: 5672
+        state: started
+      delegate_to: '{{ rabbitmq_master }}'
+      run_once: true
+
+    - name: Join nodes to master rabbit node
+      shell: rabbitmqctl join_cluster "rabbit@{{ rabbitmq_master }}"
+      when: inventory_hostname != rabbitmq_master
+
+    - name: Start rabbit MQ app
+      shell: rabbitmqctl start_app
+      when: inventory_hostname != rabbitmq_master
