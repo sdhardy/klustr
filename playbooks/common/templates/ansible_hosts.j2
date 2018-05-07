@@ -1,7 +1,9 @@
 {% for group_name in groups %}
- 
+
+{% if group_name != 'all' %}
 [{{ group_name }}]
 {% for hostname in groups[group_name] %}
 {{ hostname }}
 {% endfor %}
+{% endif %}
 {% endfor %}
