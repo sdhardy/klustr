@@ -41,7 +41,7 @@
 
       - name: Write in-memory inventory to file
         template:
-          src: '{{ playbook_dir }}/common/templates/ansible_hosts.j2'
+          src: '{{ playbook_dir }}/common/templates/ansible_inventory.j2'
           dest: '{{ playbook_dir}}/inventory/ansible_hosts'
           owner: root
           group: root
