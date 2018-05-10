@@ -22,7 +22,7 @@
         rabbitmq_erlang_cookie: "{{ lookup('password', '/tmp/.erlang.cookie length=20 chars=ascii_letters,digits') }}"
       when: rabbitmq_erlang_cookie is not defined
 
-    - name: Install rabbit mq
+    - name: Install rabbitmq packages
       apt:
         name: "{{ item }}"
         state: present
@@ -30,6 +30,7 @@
       with_items:
         - rabbitmq-server
         - erlang-nox
+        - erlang-corba
 
     - name: Stop rabbitmq server on nodes
       service:
