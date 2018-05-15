@@ -90,12 +90,6 @@
       shell: rabbitmqctl start_app
       when: inventory_hostname != rabbitmq_master
 
-    - name: Cleanup temporary erlang cookie file
-      file:
-        path: '/tmp/.erlang.cookie'
-        state: present
-      tags: cleanup
-
     - name: Download rabbitmqadmin script add add it to PATH
       get_url:
         url: 'http://{{ inventory_hostname }}:15672/cli/rabbitmqadmin'
