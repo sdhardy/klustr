@@ -85,3 +85,9 @@
     - name: Start rabbit MQ app
       shell: rabbitmqctl start_app
       when: inventory_hostname != rabbitmq_master
+
+    - name: Cleanup temporary erlang cookie file
+      file:
+        path: '/tmp/.erlang.cookie'
+        state: present
+      tags: cleanup
