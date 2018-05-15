@@ -32,6 +32,10 @@
         - erlang-nox
         - erlang-corba
 
+    - name: Enable rabbitmq managent plugin
+      shell: rabbitmq-plugins enable rabbitmq_management 
+      tags: admin
+
     - name: Stop rabbitmq server on nodes
       service:
         name: rabbitmq-server
@@ -91,3 +95,12 @@
         path: '/tmp/.erlang.cookie'
         state: present
       tags: cleanup
+
+    - name: Download rabbitmqadmin script add add it to PATH
+      get_url:
+        url: 'http://{{ inventory_hostname }}:15672/cli/rabbitmqadmin'
+        dest: '/usr/local/bin/rabbitmqadmin'
+        group: root
+        owner: root
+        mode: 0755
+      tags: admin
