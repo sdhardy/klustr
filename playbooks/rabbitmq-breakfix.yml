@@ -1,0 +1,44 @@
+---
+  - name: Rabbit MQ breakfix
+    hosts: rabbit
+    vars:
+      current_group: rabbit
+    tasks:
+    - name: Select cluster node to perform break on
+      set_fact:
+        breakfix_host: '{{ item }}'
+      with_random_choice: '{{ groups["rabbit"] }}'
+      run_once: true
+      tags:
+       - breakfix-1
+
+    - name: Generate rabbitmq erlang cookie
+      lineinfile:
+        line: '.'
+        path: '/var/lib/rabbitmq/.erlang.cookie'
+        state: present
+        group: root
+        owner: root
+        mode: 0400
+      delegate_to: '{{ breakfix_host }}'
+      run_once: true
+      tags:
+       - breakfix-1
+
+    - name: Stop rabbitmq server on random node
+      service:
+        name: rabbitmq-server
+        state: stopped
+      delegate_to: '{{ breakfix_host }}'
+      run_once: true
+      tags:
+       - breakfix-1
+
+    - name: Ensure rabbit MQ is stopped before proceeding
+      wait_for:
+        port: 5672
+        state: stopped
+      delegate_to: '{{ breakfix_host }}'
+      run_once: true
+      tags:
+       - breakfix-1
