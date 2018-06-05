@@ -4,7 +4,30 @@
     vars:
       current_group: rabbit
     tasks:
-    - name: Select cluster node to perform break on
+    - name: Pushing script to create dummy data
+      copy:
+        src: '{{ playbook_dir }}/common/files/dummy_data.sh'
+        dest: /root/rabbitmq_dummy_data.sh
+        owner: root
+        group: root
+        mode: 755
+      tags:
+       - dummy-data
+
+    - name: Add dummy data to rabbit MQ queues
+      command: /root/rabbitmq_dummy_data.sh
+      run_once: true
+      tags:
+       - dummy-data
+
+    - name: Remove any evidence
+      file: 
+        path: /root/rabbitmq_dummy_data.sh
+        state: absent
+      tags:
+       - dummy-data
+
+    - name: Select cluster node to perform breakfix on
       set_fact:
         breakfix_host: '{{ item }}'
       with_random_choice: '{{ groups["rabbit"] }}'
@@ -36,7 +59,7 @@
 
     - name: Ensure rabbit MQ is stopped before proceeding
       wait_for:
-        port: 5672
+        port: 15672
         state: stopped
       delegate_to: '{{ breakfix_host }}'
       run_once: true
