@@ -56,12 +56,3 @@
       run_once: true
       tags:
        - breakfix-1
-
-    - name: Ensure rabbit MQ is stopped before proceeding
-      wait_for:
-        port: 15672
-        state: stopped
-      delegate_to: '{{ breakfix_host }}'
-      run_once: true
-      tags:
-       - breakfix-1
