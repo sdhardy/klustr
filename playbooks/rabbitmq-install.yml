@@ -3,6 +3,15 @@
     hosts: rabbit
     vars:
       current_group: rabbit
+    pre_tasks:
+    - name: Check if python is installed
+      raw: test -e /usr/bin/python 
+      register: python_installed
+
+    - name: Bootstrap python
+      raw: apt install python-minimal -y
+      when: python_installed is failed
+
     tasks:
     - name: Select rabbitmq master
       set_fact:
