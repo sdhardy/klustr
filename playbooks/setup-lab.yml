@@ -29,6 +29,12 @@
              do
               sleep 1
              done
+            
+            if [ ! -d /root/.ssh ]; then
+             mkdir /root/.ssh
+             chmod 0700 /root/.ssh
+             echo "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}" | tee -a /root/.ssh/authorized_keys
+            fi 
         with_items: '{{ rabbit_nodes }}'
         register: container_info
 
