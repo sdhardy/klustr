@@ -5,12 +5,7 @@
       current_group: rabbit
     pre_tasks:
     - name: Check if python is installed
-      raw: test -e /usr/bin/python 
-      register: python_installed
-
-    - name: Bootstrap python
-      raw: apt install python-minimal -y
-      when: python_installed is failed
+      raw: test -e /usr/bin/python || (apt update && apt install -y python-minimal) 
 
     tasks:
     - name: Select rabbitmq master
