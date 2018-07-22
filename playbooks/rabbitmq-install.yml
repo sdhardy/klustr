@@ -5,7 +5,10 @@
       current_group: rabbit
     pre_tasks:
     - name: Check if python is installed
-      raw: test -e /usr/bin/python || (apt update && apt install -y python-minimal) 
+      raw: test -e /usr/bin/python || (apt update && apt install -qy python-minimal) 
+
+    - name: Gathering facts
+      setup:
 
     tasks:
     - name: Select rabbitmq master
