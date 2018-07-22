@@ -11,8 +11,12 @@
       - name: Install dependency packages for lxc
         apt: name={{ item }} state=present
         with_items:
-          - python-lxc
+          #- python-lxc
           - lxc
+ 
+      - name: Install LXC python bindings
+        pip:
+          name: lxc-python2
 
       - name: Create Rabbit MQ LXC containers
         lxc_container:
