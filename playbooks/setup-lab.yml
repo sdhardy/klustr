@@ -11,8 +11,8 @@
       - name: Install dependency packages for lxc
         apt: name={{ item }} state=present
         with_items:
-          #- python-lxc
           - lxc
+          - lxc-dev
  
       - name: Install LXC python bindings
         pip:
