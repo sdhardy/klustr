@@ -7,8 +7,7 @@
     - name: Check if python is installed
       raw: test -e /usr/bin/python || (apt update && apt install -qy python-minimal) 
 
-    - name: Gathering facts
-      setup:
+    - setup:
 
     tasks:
     - name: Select rabbitmq master
