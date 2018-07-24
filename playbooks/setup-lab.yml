@@ -14,9 +14,7 @@
     tasks:
       - name: Loading playbook configurations
         include_vars:
-          files_matching: '*_overrides.yml'
-          depth: 1
-          extensions: ['yaml', 'yml']
+          file: 'lab_overrides.yml'
 
       - name: Install dependency packages for lxc
         apt: name={{ item }} state=present
