@@ -21,6 +21,7 @@
         with_items:
           - lxc
           - lxc-dev
+          - lxc-templates
  
       - name: Install LXC python bindings
         pip:
