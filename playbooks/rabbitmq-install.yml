@@ -1,6 +1,7 @@
 ---
   - name: Rabbit MQ Cluster
     hosts: rabbit
+    gather_facts: False
     vars:
       current_group: rabbit
     pre_tasks:
