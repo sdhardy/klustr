@@ -7,7 +7,17 @@
         - node1_rabbit_mq_container
         - node2_rabbit_mq_container
         - node3_rabbit_mq_container
+      galera_nodes:
+        - node1_galera_container
+        - node2_galera_container
+        - node3_galera_container
     tasks:
+      -name: Loading playbook configurations
+       include_vars:
+         files_matching: '*_overrides.yml'
+         depth: 1
+         extensions: ['yaml', 'yml']
+
       - name: Install dependency packages for lxc
         apt: name={{ item }} state=present
         with_items:
