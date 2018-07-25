@@ -1,13 +1,21 @@
 # README
 
+# Table of contents
+- [Introduction](#introduction)
+- [RabbitMQ lab](#rabbitmq)
+
+<div id="introduction" />
+## Introduction
 The playbooks are meant to create minimal clustered environments based on LXC for learning purposes.
 
 Clustered technologies to be looked into initially include:
 - RabbitMQ
 - Galera
-- HA Proxy
 
 Only the rabbit MQ, portion is implemented at this time.
+
+<div id="rabbitmq" />
+## Rabbit MQ lab
 
 To test the Rabbit Clustering functionality,
 
