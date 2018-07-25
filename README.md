@@ -4,6 +4,7 @@
 - [Introduction](#introduction)
 - [Rabbit MQ lab](#rabbitmq)
 
+
 ## Introduction
 <div id="introduction" />
 The playbooks are meant to create minimal clustered environments based on LXC for learning purposes.
