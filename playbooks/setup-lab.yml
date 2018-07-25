@@ -27,7 +27,17 @@
         pip:
           name: lxc-python2
 
-      - name: Create Rabbit MQ LXC containers
+      - name: Determine if we need to create a Rabbit MQ cluster
+        set_fact:
+          rabbit_nodes: []
+        when: install_rabbit_mq == False 
+
+      - name: Determine if we need to create a Galera  cluster
+        set_fact:
+          galera_nodes: []
+        when: install_galera == False 
+
+      - name: Create LXC containers
         lxc_container:
           name: '{{ item }}'
           container_log: true
@@ -48,10 +58,13 @@
              chmod 0700 /root/.ssh
              echo "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}" | tee -a /root/.ssh/authorized_keys
             fi 
-        with_items: '{{ rabbit_nodes }}'
+        with_items: 
+          - '{{ rabbit_nodes }}'
+          - '{{ galera_nodes }}'
         register: container_info
+        when: ( galera_nodes|length > 0) or ( rabbit_nodes|length > 0)
 
-      - name: Build in-memory inventory inventory
+      - name: Build in-memory inventory
         add_host:
           name: '{{ item.item }}'
           ansible_host: '{{ item.lxc_container.ips.0 }}'
