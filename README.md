@@ -4,8 +4,8 @@
 - [Introduction](#introduction)
 - [RabbitMQ lab](#rabbitmq)
 
-<div id="introduction" />
 ## Introduction
+<div id="introduction" />
 The playbooks are meant to create minimal clustered environments based on LXC for learning purposes.
 
 Clustered technologies to be looked into initially include:
@@ -14,8 +14,7 @@ Clustered technologies to be looked into initially include:
 
 Only the rabbit MQ, portion is implemented at this time.
 
-<div id="rabbitmq" />
-## Rabbit MQ lab
+## Rabbit MQ lab<div id="rabbitmq" />
 
 To test the Rabbit Clustering functionality,
 
