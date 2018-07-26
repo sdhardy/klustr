@@ -68,9 +68,23 @@
         add_host:
           name: '{{ item.item }}'
           ansible_host: '{{ item.lxc_container.ips.0 }}'
-          groups: rabbit
+          groups: all_containers
         with_items: '{{ container_info.results }}'
 
+      - name: Create Rabbit MQ hosts group
+        add_host:
+          name: "{{ item }}"
+          group: rabbit
+        with_items: "{{ groups['all_containers'] }}"
+        when: item is search("_rabbit_mq_container")
+          
+      - name: Create Galera hosts group
+        add_host:
+          name: "{{ item }}"
+          group: galera
+        with_items: "{{ groups['all_containers'] }}"
+        when: item is search("_galera_container")
+          
       - name: Write in-memory inventory to file
         template:
           src: '{{ playbook_dir }}/common/templates/ansible_inventory.j2'
