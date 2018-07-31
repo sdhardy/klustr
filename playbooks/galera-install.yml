@@ -26,3 +26,10 @@
         with_items:
           - rsync
           - mariadb-server
+
+      - name: Lay down galera.cnf
+        template:
+          src: '{{ playbook_dir }}/common/templates/galera.cnf.j2'
+          dest: /etc/mysql/conf.d/galera.cnf
+          owner: mysql
+          mode: 0644
