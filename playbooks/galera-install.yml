@@ -1,0 +1,28 @@
+---
+  - name: Setup Galera cluster
+    hosts: galera
+    tasks:
+      - name: Update apt cache
+        apt: update_cache=yes
+
+      - name: Add Galera repository
+        apt_repository:
+          repo: deb [arch=amd64,i386,ppc64el] http://ftp.utexas.edu/mariadb/repo/10.1/ubuntu xenial main
+          state: present
+          filename: galera
+
+      - name: Add GPG keys for Galera repository
+        apt_key:
+          server: keyserver.ubuntu.com
+          id: 0xF1656F24C74CD1D8
+
+      - name: Update apt cache
+        apt: update_cache=yes
+
+      - name: Install Galera packages
+        apt:
+          name: '{{ item }}'
+          state: present
+        with_items:
+          - rsync
+          - mariadb-server
