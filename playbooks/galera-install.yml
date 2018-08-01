@@ -7,14 +7,14 @@
 
       - name: Add Galera repository
         apt_repository:
-          repo: deb [arch=amd64,i386,ppc64el] http://ftp.utexas.edu/mariadb/repo/10.1/ubuntu xenial main
+          repo: deb http://ftp.osuosl.org/pub/mariadb/repo/10.0/ubuntu trusty main
           state: present
           filename: galera
 
       - name: Add GPG keys for Galera repository
         apt_key:
-          server: keyserver.ubuntu.com
-          id: 0xF1656F24C74CD1D8
+          keyserver: keyserver.ubuntu.com
+          id: '0xcbcb082a1bb943db'
 
       - name: Update apt cache
         apt: update_cache=yes
@@ -25,4 +25,22 @@
           state: present
         with_items:
           - rsync
-          - mariadb-server
+          - mariadb-galera-server
+
+      - name: Create mew Galera cluster configuration
+        template:
+          src: '{{ playbook_dir }}/common/templates/galera.cnf.j2'
+          dest: /etc/mysql/conf.d/galera.cnf
+          owner: mysql
+          mode: 0644
+
+      - name: Stop MariaDB across the nodes
+        service:
+          name: mysql
+          state: stopped
+
+
+      - name: Ensure MariaDB is stopped
+        wait_for:
+          port: 3306
+          state: stopped
