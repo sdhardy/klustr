@@ -39,8 +39,20 @@
           name: mysql
           state: stopped
 
-
       - name: Ensure MariaDB is stopped
         wait_for:
           port: 3306
           state: stopped
+
+      - name: Stop MariaDB on first node as a new Galera cluster
+        service:
+          name: mysql
+          state: started
+          arguments: '--wsrep-new-cluster'
+        when: ansible_hostname == groups.galera.0
+
+      - name: Start MariaDB on other cluster nodes
+        service:
+          name: mysql
+          state: started
+        when: ansible_hostname != groups.galera.0
