@@ -2,7 +2,8 @@
 
 # Table of contents
 - [Introduction](#introduction)
-- [Rabbit MQ lab](#rabbitmq)
+- [RabbitMQ Cluster](#rabbitmq)
+- [Galera Cluster](#galera)
 
 
 ## Introduction
@@ -15,7 +16,7 @@ Clustered technologies to be looked into initially include:
 
 Only the rabbit MQ, portion is implemented at this time.
 
-## Rabbit MQ lab
+## RabbitMQ Cluster
 <div id="rabbitmq" />
 
 To build a three-node vanilla Rabbit MQ cluster for learning purposes, follow the steps below:
@@ -85,3 +86,7 @@ Cluster status of node rabbit@node3_rabbit_mq_container ...
 
 /opt/klustr/playbooks# 
 ```
+
+
+## Galera Cluster
+<div id="galera" />

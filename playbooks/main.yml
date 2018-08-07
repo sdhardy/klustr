@@ -9,3 +9,6 @@
   tags: 
     - rabbitmq-install
     
+- import_playbook: galera-install.yml
+  tags:
+    - galera-install
