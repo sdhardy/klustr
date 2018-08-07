@@ -122,7 +122,7 @@ Cluster status of node rabbit@node3_rabbit_mq_container ...
 ## Additional Playbooks
 <div id="additional" />
 
-The `rabbitmq-breakfix.yml` playbook  has two tags  - dummy-data and breakfix-1. 
+The `rabbitmq-breakfix.yml` playbook  has two tags  - dummy-data and breakfix-1. The former will inject dummy data into message queues while the latter will break the cluster for you to fix.
 
 ```
 /opt/klustr/playbooks# ansible-playbook rabbitmq-breakfix.yml --list-tags
