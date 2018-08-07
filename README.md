@@ -194,4 +194,3 @@ Cluster status of node rabbit@node3_rabbit_mq_container ...
 
 ## Galera Cluster
 <div id="galera" />
-
