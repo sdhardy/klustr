@@ -1,4 +1,4 @@
-lab_host: 192.68.10.2
+lab_address: 192.68.10.2
 
 install_rabbit_mq: true
 
