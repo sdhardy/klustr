@@ -1,5 +1,3 @@
-lab_host: 192.68.10.2
-
 install_rabbit_mq: true
 
 install_galera: true
