@@ -17,7 +17,7 @@
 
       - name: Add GPG keys for Galera repository
         apt_key:
-          keyserver: keyserver.ubuntu.com
+          keyserver: hkp://keyserver.ubuntu.com:80
           id: '0xF1656F24C74CD1D8'
 
       - name: Update apt cache
@@ -27,6 +27,7 @@
         apt:
           name: '{{ item }}'
           state: present
+          allow_unauthenticated: yes
         with_items:
           - rsync
           - mariadb-galera-server
