@@ -18,7 +18,7 @@
       - name: Add GPG keys for Galera repository
         apt_key:
           keyserver: keyserver.ubuntu.com
-          id: '0xcbcb082a1bb943db'
+          id: '0xF1656F24C74CD1D8'
 
       - name: Update apt cache
         apt: update_cache=yes
