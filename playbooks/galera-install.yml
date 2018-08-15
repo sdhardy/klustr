@@ -1,6 +1,10 @@
 ---
   - name: Setup Galera cluster
     hosts: galera
+    gather_facts: false
+    pre_tasks:
+      - name: Check if python is installed
+        raw: test -e /usr/bin/python || (apt update && apt install -qy python-minimal)
     tasks:
       - name: Update apt cache
         apt: update_cache=yes
