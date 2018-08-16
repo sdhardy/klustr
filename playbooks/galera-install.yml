@@ -1,8 +1,7 @@
 ---
   - name: Setup Galera cluster
     hosts: galera
-    gather_facts: false
-    - import_playbook: python-common.yml 
+    gather_facts: true
     tasks:
       - name: Update apt cache
         apt: update_cache=yes

@@ -104,3 +104,7 @@
       - name: Add SSH fingerpring to ~/.ssh/known_hosts
         shell: ssh-keyscan -H '{{ item.lxc_container.ips.0 }}' >> ~/.ssh/known_hosts
         with_items: "{{ container_info.results }}"
+
+      - name: Install python on each container
+        shell: lxc-attach -n "{{ item }}" -- apt install -y python-minimal
+        with_items: "{{ groups['all_containers'] }}"

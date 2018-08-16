@@ -1,4 +1,0 @@
-# Just install python outside of the main playbooks before gather_facts is run
----
-  - name: Check if python is installed
-  raw: test -e /usr/bin/python || (apt update && apt install -qy python-minimal)
